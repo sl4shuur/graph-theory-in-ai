@@ -291,9 +291,31 @@ This multi-layer approach allows GNNs to capture long-range dependencies and com
 The timeline of developments reveals the rapid evolution of this field, from foundational graph theory concepts to cutting-edge applications in molecular property prediction, social network analysis, and knowledge graph reasoning.
 The emergence of specialized frameworks like \textbf{PyTorch Geometric} and \textbf{DGL} \cite{pytorch_geometric,dgl} has further accelerated research and practical adoption of GNNs across diverse domains.
 
-Looking forward, the field continues to grapple with fundamental questions about the expressive power of message-passing architectures and the development of more powerful graph learning paradigms.
+Looking forward, the field continues to struggle with fundamental questions about the expressive power of message-passing architectures and the development of more powerful graph learning paradigms.
 The integration of graph neural networks with other advanced architectures such as transformers and the exploration of topological deep learning represent promising directions for future research.
 
+\section{Practical Implementation and Code Repository}
+
+To complement the theoretical foundations presented in this essay, practical implementation examples are essential for understanding how \textbf{Graph Neural Networks} operate in real-world scenarios.
+This section outlines the availability of corresponding code implementations that demonstrate the concepts discussed throughout this paper.
+
+\textbf{Repository Overview:} A comprehensive code \href{https://github.com/sl4shuur/graph-theory-in-ai}{repository} has been developed to support this essay (even though it was not initially planned as part of the project), providing hands-on implementations of the key GNN architectures discussed.
+The repository includes practical examples of both Graph Convolutional Networks (GCNs) and Graph Attention Networks (GATs), implemented from scratch using simple frameworks like \textbf{NumPy}.
+More advanced implementations with \textbf{PyTorch} and other libraries are planned for future updates, potentially including visualization tools and more complex datasets.
+
+The \href{https://github.com/sl4shuur/graph-theory-in-ai}{repository} contains:
+\begin{itemize}
+      \item \textbf{Comparative Analysis:} Direct comparison between CNNs and GCNs, examining their mathematical formulations, computational efficiency, and practical applications.
+      \item \textbf{GCN Implementation:} Complete implementation of the GCN layer update rule as described in the mathematical formulation, including the normalized adjacency matrix computation and feature aggregation mechanisms.
+      \item \textbf{GAT Implementation:} Full implementation of the attention mechanism, including attention coefficient computation, softmax normalization, and multi-head attention capabilities.
+      \item \textbf{Practical Examples:} Real-world datasets like MNIST, ImageNet and use cases demonstrating node classification, link prediction, and graph classification tasks.
+      \item \textbf{Visualization Tools:} Code for visualizing graph structures, attention weights, and learned node embeddings to provide intuitive understanding of how these networks operate.
+\end{itemize}
+
+\textbf{LaTeX Source:} This essay's complete LaTeX source code, including all figures, mathematical formulations, and bibliography files, is also included in the repository.
+
+\textbf{Educational Purpose:} The code implementations are designed with educational clarity in mind, featuring extensive comments and step-by-step explanations that directly correspond to the mathematical formulations presented in this essay.
+Each implementation includes detailed documentation explaining the theoretical concepts alongside the practical code. Any suggestions for improvements or additional features are welcome. \textbf{Thank you in advance!}
 
 \bibliographystyle{unsrt}
 \bibliography{references}
