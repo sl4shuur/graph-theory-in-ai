@@ -50,7 +50,7 @@ Euler’s solution – proving that no path exists that crosses each of the city
 Over the next two centuries, graph theory was developed by many mathematicians, including Cayley, Kirchhoff, and Whitney, who established foundational concepts such as connectivity, planarity, and graph coloring.
 
 % photo of Königsberg bridges
-\begin{figure}[h]
+\begin{figure}[ht]
       \centering
       \includegraphics[width=0.4\textwidth]{../assets/konigsberg-bridges.png}
       \caption{The original seven bridges of Königsberg, which inspired Euler's work on graph theory.}
@@ -66,12 +66,38 @@ Around the same time, probabilistic graphical models were developed – \textbf{
 
 These early uses of graphs in AI, however, treated graphs as static structures or as a backdrop for algorithms; there was \textit{no concept} of learning on graphs with neural networks yet.
 
-% photo of  Bayesian networks and Markov random fields
-\begin{figure}[h]
+% photo of Bayesian networks and Markov random fields
+\begin{figure}[ht]
       \centering
       \includegraphics[width=1\textwidth,trim=0 100 0 0,clip]{../assets/bayesian-and-markov-networks.png}
       \caption{\textbf{Minimal I-map Bayesian networks for a nonchordal Markov network.} \\ (a) A Markov network $\mathcal{H}_\ell$ with a loop. (b) A minimal I-map $\mathcal{G}_\ell$ Bayesian network for $\mathcal{H}_\ell$.}
       \label{fig:bayesian-networks}
+\end{figure}
+
+\subsection{The Emergence of Graph Neural Networks}
+
+The idea of combining neural networks with graph-structured data began to take shape in the 1990s.
+Researchers explored recursive neural networks (RNNs) \cite{schmidt2019recurrent} and other architectures that could process structured inputs like sequences or trees.
+Notably, Frasconi, Gori, and Sperduti (1998) \cite{frasconi1998general} proposed a \textbf{general framework} for adapting neural networks to structured data like graphs.
+These early approaches could handle specific cases (often restricted to trees or acyclic graphs) by \textbf{recursively propagating information}, but they were \textit{limited} in scope and difficult to train.
+
+A milestone was reached in 2007, when \textbf{Marco Gori} and colleagues introduced \textit{a new model for learning in graph domains} \cite{gori2007new} – essentially the first design of what we now call a \textbf{Graph Neural Network (GNN)}.
+
+This was followed by \textit{Franco Scarselli}, \textit{Marco Gori}, and others formally defining the Graph Neural Network (GNN) model in 2009 \cite{scarselli2009graph}.
+Scarselli et al.’s GNN was a neural network architecture that could directly take a graph as input and perform inference either at the node level or graph level, by iteratively propagating "state" information along the graph’s edges until reaching a stable equilibrium.
+This model extended earlier recursive neural net ideas and incorporated concepts from \textbf{random walks} and \textbf{Markov chains} on graphs.
+
+In short, the GNN model of 2009 provided a way to learn node representations by an iterative \textbf{message-passing process} on the graph \cite{rizvi2022fimp}.
+Early applications of these first GNNs included predicting properties of chemical compounds, classifying web pages (by modeling the web as a graph), fraud detection and other relational tasks.
+The field was thus born from a marriage of graph theory (to represent relational structure) and neural network learning.
+
+% photo of GNN message passing
+\begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.8\textwidth]{../assets/gnn-message-passing.png}
+      \caption{Message passing in Graph Neural Networks (GNNs).
+            The GNN iteratively updates node representations by aggregating information from neighboring nodes, allowing it to learn complex relationships in graph-structured data.}
+      \label{fig:gnn-message-passing}
 \end{figure}
 
 
