@@ -100,6 +100,36 @@ The field was thus born from a marriage of graph theory (to represent relational
       \label{fig:gnn-message-passing}
 \end{figure}
 
+\section{Timeline of Key Developments in Graph Neural Networks}
+
+From those initial ideas in 2005–2009, the area of graph-based neural networks has rapidly evolved.
+Below is a timeline of major developments balancing historical milestones with recent advances:
+
+\begin{itemize}
+      \item \textbf{1736:} Euler solves the Königsberg bridge problem, laying the foundation for graph theory \cite{carlson2019konigsberg}. (While not AI, this marks the origin of graph theory itself).
+      \item \textbf{1950s–1970s:} Graphs used in early AI knowledge representation (semantic networks) and problem-solving (state-space graphs for search algorithms). Marvin Minsky and others promote graph-based representations for AI knowledge \cite{kelemen2007neural}.
+      \item \textbf{1980s:} Judea Pearl publishes \textit{Probabilistic Reasoning in Intelligent Systems}, introducing Bayesian networks (directed acyclic graphs) for AI reasoning \cite{pearl1995bayesian}. Markov random fields also emerge as undirected graphical models \cite{lang2024abstract}. Graphical models become a core AI tool (though not neural networks, they highlight the power of graphs in AI).
+      \item \textbf{1997–1998:} Researchers (e.g. Goller \& Küchler; Frasconi, Gori \& Sperduti) propose neural network models for structured data such as trees and small graphs. These can be seen as precursors to modern GNNs. \cite{frasconi1998general}.
+      \item \textbf{2007:} Gori, Monfardini, and Scarselli introduce the concept of a trainable neural network model for graphs \cite{gori2007new}. Also, they demonstrate GNNs for web page ranking and other tasks, showing that neural networks can learn on graph data (this is among the first uses of the term “Graph Neural Network”).
+      \item \textbf{2009:} Scarselli et al. formally define Graph Neural Networks (GNNs) as a neural network architecture for graphs \cite{scarselli2009graph}. This paper formalizes GNNs and presents a learning algorithm for node- and graph-focused tasks. They prove that their GNN model has a form of universal approximation capability on graphs (under certain conditions) \cite{scarselli2009computational}, meaning it can represent a broad class of graph functions. However, training these early GNNs required an expensive iterative procedure (essentially performing graph recurrent neural network updates until convergence), which made them hard to scale to large or complex graphs.
+      \item \textbf{2012:} Krizhevsky et al. introduce deep convolutional neural networks (CNNs) for image classification, achieving breakthrough performance on the ImageNet dataset \cite{krizhevsky2012imagenet}. This work popularizes deep learning and inspires subsequent research on graph-based deep learning methods.
+      \item \textbf{2013:} The deep learning era meets graphs: Bruna et al. propose the first \textbf{graph convolutional network model} using spectral graph theory \cite{bruna2013spectral}. This approach generalizes convolutional neural networks (CNNs) from grid data (images) to graph data by working in the spectral domain of the graph Laplacian. This is a significant step in bridging deep learning with graph structures.
+      \item \textbf{2014–2017:} Various advancements refine graph convolution. Notably, \textbf{Kipf \& Welling (2016)} introduce the \textbf{Graph Convolutional Network (GCN)}, which simplifies spectral convolutions to a very efficient form for semi-supervised learning on graphs \cite{kipf2017semigcn}. The GCN model operates in the spatial domain by a simple rule: each node iteratively aggregates (sums/averages) feature information from its neighbors and then applies a weight transformation. In \textbf{2017, Petar Veličković} et al. introduced \textbf{Graph Attention Networks (GATs)}, which extend GCNs by incorporating attention mechanisms to weigh neighbor contributions dynamically \cite{veličković2018graphattentionnetworks}. This allows GATs to learn which neighbors are most important for each node, improving performance on heterogeneous graphs.
+      \item \textbf{2020–present:} GNNs become one of the hottest areas in deep learning research. Frameworks like \textbf{PyTorch Geometric} \cite{pytorch_geometric} and \textbf{DGL (Deep Graph Library)} \cite{dgl} are released to facilitate GNN development.
+
+\end{itemize}
+
+Researchers push GNNs into new domains: \textbf{graph transformers} emerge, combining transformers with graph structures for higher expressive power;
+\textbf{hypergraph neural networks} handle hyperedges;
+and \textbf{topological deep learning} blends graph neural nets with algebraic topology.
+By 2021-2022, questions arose about the fundamental limits of message-passing GNNs. It remains an \textbf{open question} whether architectures strictly more powerful than message passing exist or whether any graph neural network can be reduced to message passing on some augmented graph.
+
+In other words, researchers are debating how to go \textbf{beyond message-passing}, which currently underlies most GNN models.
+Despite this, the impact of GNNs is undeniable – they achieved breakthroughs like deep learning on molecules, predicting protein structures, and powerfully modeling relational data across disciplines.
+
+This essay examines the fundamental concepts and core applications of Graph Neural Networks, providing a comprehensive analysis of their theoretical foundations rather than surveying recent research developments.
+Building upon the foundational 2009 GNN model discussed above, we proceed to analyze the Graph Convolutional Network (GCN) architecture, establishing theoretical and practical comparisons with Convolutional Neural Networks (CNNs). Subsequently, we investigate Graph Attention Networks (GATs), which represent a significant advancement in GNN design through the incorporation of attention mechanisms that enable dynamic weighting of neighboring node contributions.
+
 
 \bibliographystyle{plain}
 \bibliography{references}
