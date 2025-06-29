@@ -111,8 +111,8 @@ Below is a timeline of major developments balancing historical milestones with r
       \item \textbf{1980s:} Judea Pearl publishes \textit{Probabilistic Reasoning in Intelligent Systems}, introducing Bayesian networks (directed acyclic graphs) for AI reasoning \cite{pearl1995bayesian}. Markov random fields also emerge as undirected graphical models \cite{lang2024abstract}. Graphical models become a core AI tool (though not neural networks, they highlight the power of graphs in AI).
       \item \textbf{1997–1998:} Researchers (e.g. Goller \& Küchler; Frasconi, Gori \& Sperduti) propose neural network models for structured data such as trees and small graphs. These can be seen as precursors to modern GNNs. \cite{frasconi1998general}.
       \item \textbf{2007:} Gori, Monfardini, and Scarselli introduce the concept of a trainable neural network model for graphs \cite{gori2007new}. Also, they demonstrate GNNs for web page ranking and other tasks, showing that neural networks can learn on graph data (this is among the first uses of the term “Graph Neural Network”).
-      \item \textbf{2009:} Scarselli et al. formally define Graph Neural Networks (GNNs) as a neural network architecture for graphs \cite{scarselli2009graph}. This paper formalizes GNNs and presents a learning algorithm for node- and graph-focused tasks. They prove that their GNN model has a form of universal approximation capability on graphs (under certain conditions) \cite{scarselli2009computational}, meaning it can represent a broad class of graph functions. However, training these early GNNs required an expensive iterative procedure (essentially performing graph recurrent neural network updates until convergence), which made them hard to scale to large or complex graphs.
-      \item \textbf{2012:} Krizhevsky et al. introduce deep convolutional neural networks (CNNs) for image classification, achieving breakthrough performance on the ImageNet dataset \cite{krizhevsky2012imagenet}. This work popularizes deep learning and inspires subsequent research on graph-based deep learning methods.
+      \item \textbf{2009:} \textbf{Scarselli et al.} formally define \textbf{Graph Neural Networks (GNNs)} as a neural network architecture for graphs \cite{scarselli2009graph}. This paper formalizes GNNs and presents a learning algorithm for node- and graph-focused tasks. They prove that their GNN model has a form of universal approximation capability on graphs (under certain conditions) \cite{scarselli2009computational}, meaning it can represent a broad class of graph functions. However, training these early GNNs required an expensive iterative procedure (essentially performing graph recurrent neural network updates until convergence), which made them hard to scale to large or complex graphs.
+      \item \textbf{2012:} \textbf{Krizhevsky et al.} introduce deep \textbf{convolutional neural networks (CNNs)} for image classification, achieving breakthrough performance on the ImageNet dataset \cite{krizhevsky2012imagenet}. This work popularizes deep learning and inspires subsequent research on graph-based deep learning methods.
       \item \textbf{2013:} The deep learning era meets graphs: Bruna et al. propose the first \textbf{graph convolutional network model} using spectral graph theory \cite{bruna2013spectral}. This approach generalizes convolutional neural networks (CNNs) from grid data (images) to graph data by working in the spectral domain of the graph Laplacian. This is a significant step in bridging deep learning with graph structures.
       \item \textbf{2014–2017:} Various advancements refine graph convolution. Notably, \textbf{Kipf \& Welling (2016)} introduce the \textbf{Graph Convolutional Network (GCN)}, which simplifies spectral convolutions to a very efficient form for semi-supervised learning on graphs \cite{kipf2017semigcn}. The GCN model operates in the spatial domain by a simple rule: each node iteratively aggregates (sums/averages) feature information from its neighbors and then applies a weight transformation. In \textbf{2017, Petar Veličković} et al. introduced \textbf{Graph Attention Networks (GATs)}, which extend GCNs by incorporating attention mechanisms to weigh neighbor contributions dynamically \cite{veličković2018graphattentionnetworks}. This allows GATs to learn which neighbors are most important for each node, improving performance on heterogeneous graphs.
       \item \textbf{2020–present:} GNNs become one of the hottest areas in deep learning research. Frameworks like \textbf{PyTorch Geometric} \cite{pytorch_geometric} and \textbf{DGL (Deep Graph Library)} \cite{dgl} are released to facilitate GNN development.
@@ -127,11 +127,80 @@ By 2021-2022, questions arose about the fundamental limits of message-passing GN
 In other words, researchers are debating how to go \textbf{beyond message-passing}, which currently underlies most GNN models.
 Despite this, the impact of GNNs is undeniable – they achieved breakthroughs like deep learning on molecules, predicting protein structures, and powerfully modeling relational data across disciplines.
 
-This essay examines the fundamental concepts and core applications of Graph Neural Networks, providing a comprehensive analysis of their theoretical foundations rather than surveying recent research developments.
-Building upon the foundational 2009 GNN model discussed above, we proceed to analyze the Graph Convolutional Network (GCN) architecture, establishing theoretical and practical comparisons with Convolutional Neural Networks (CNNs). Subsequently, we investigate Graph Attention Networks (GATs), which represent a significant advancement in GNN design through the incorporation of attention mechanisms that enable dynamic weighting of neighboring node contributions.
+This essay examines the \textbf{fundamental concepts} and \textbf{core applications} of Graph Neural Networks, providing a comprehensive analysis of their theoretical foundations rather than surveying recent research developments.
+Building upon the foundational 2009 GNN model discussed above, we proceed to analyze the \textbf{Graph Convolutional Network (GCN)} architecture, establishing theoretical and practical comparisons with \textbf{Convolutional Neural Networks (CNNs)}. Subsequently, we investigate \textbf{Graph Attention Networks (GATs)}, which represent a significant advancement in GNN design through the incorporation of attention mechanisms that enable dynamic weighting of neighboring node contributions.
+
+\section{Convolutional Neural Networks and Graph Convolutional Networks}
+
+\textbf{Convolutional Neural Networks (CNNs)} \cite{krizhevsky2012imagenet} have revolutionized the field of computer vision by leveraging the spatial structure of images.
+An image is like a grid of pixels. A CNN looks at small parts of the grid at a time.
+They apply convolutional filters to these local regions of the input image, allowing them to learn hierarchical features and patterns.
+Then the network uses these patterns to find more complex shapes. CNNs use many layers of filters. Each layer finds more detailed features.
+This approach has led to significant advancements in image classification, object detection, and segmentation tasks.
+
+% break the page
+\newpage
+
+% photo of CNN architecture
+\begin{figure}[h]
+      \centering
+      \includegraphics[width=1.0\textwidth]{../assets/cnn_architecture.png}
+      \caption{A typical Convolutional Neural Network (CNN) architecture, which applies convolutional filters (layers) to learn hierarchical features from image.}
+      \label{fig:cnn-architecture}
+\end{figure}
+
+\textbf{Graph Convolutional Networks (GCNs)}, on the other hand, extend the principles of CNNs to graph-structured data.
+In a GCN, the convolution operation is defined in terms of the graph's topology, enabling the model to capture relationships between nodes and their neighbors.
 
 
-\bibliographystyle{plain}
+\textbf{How does it work?}
+
+A standard GCN layer operates through the following steps for each node $i$ in the graph:
+
+\begin{enumerate}
+    \item \textbf{Gather Features:} Collect the current feature vectors $h_j$ from all neighbors $j \in \mathcal{N}(i)$, plus the node's own feature $h_i$.
+    
+    \item \textbf{Normalize:} Because nodes have different degrees (numbers of neighbors), GCNs use a normalization factor. A common choice following \textbf{Kipf \& Welling (2016)} \cite{kipf2017semigcn} is:
+    \begin{equation}
+        \tilde{A} = A + I, \quad D_i = \sum_j \tilde{A}_{ij}, \quad \text{so that } D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}}
+    \end{equation}
+    where $A$ is the adjacency matrix and $I$ adds self-loops. This ensures each neighbor's contribution is scaled appropriately.
+    
+    \item \textbf{Apply Shared Weights:} Multiply the stack of gathered and normalized features by a weight matrix $W$. This transforms the aggregated neighborhood information into a new feature space.
+    
+    \item \textbf{Nonlinearity:} Pass the result through an activation function like ReLU (i.e., $\max(0, \cdot)$) to introduce non-linear modeling capabilities.
+\end{enumerate}
+
+Putting it all together, one \textbf{standard GCN layer} updates the node feature matrix $H$ as:
+\begin{equation}
+    H^{(k+1)} = \sigma\left(D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}} H^{(k)} W^{(k)}\right),
+\end{equation}
+where:
+\begin{itemize}
+    \item $H^{(k)}$ is the matrix of node features at layer $k$
+    \item $W^{(k)}$ is the learnable weight matrix for layer $k$
+    \item $\sigma$ is an activation (e.g., ReLU)
+    \item $D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}}$ smoothly averages each node's neighbors (including itself) before applying $W$
+\end{itemize}
+
+% photo of GCN architecture
+\begin{figure}[h]
+      \centering
+      \includegraphics[width=1.0\textwidth]{../assets/gcn_architecture.png}
+      \caption{A typical Graph Convolutional Network (GCN) architecture. The input graph undergoes multiple graph convolution layers that aggregate neighborhood features using graph convolution operations. Each layer transforms node features through message passing, followed by sort pooling to create a fixed-size representation, 1-D convolution for pattern extraction, and dense layers for final prediction. Colors in nodes represent different feature embeddings learned at each layer.}
+      \label{fig:gcn-architecture}
+\end{figure}
+
+By stacking multiple GCN layers, each node learns from nodes that are progressively farther away in the graph, enabling the capture of long-range dependencies and complex structural patterns.
+
+This is particularly useful for tasks such as node classification, link prediction, and graph classification.
+
+Both CNNs and GCNs share a common goal: to learn meaningful representations from structured data.
+However, they differ in their underlying assumptions and the types of relationships they can model.
+While CNNs excel at capturing local patterns in grid-like data, GCNs are designed to handle the irregular and complex structures found in graphs.
+
+
+\bibliographystyle{unsrt}
 \bibliography{references}
 
 \end{document}
