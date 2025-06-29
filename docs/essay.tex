@@ -12,6 +12,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{wrapfig}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
 \usepackage{indentfirst} % Indent first paragraph after section
@@ -142,7 +143,7 @@ This approach has led to significant advancements in image classification, objec
 \newpage
 
 % photo of CNN architecture
-\begin{figure}[h]
+\begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{../assets/cnn_architecture.png}
       \caption{A typical Convolutional Neural Network (CNN) architecture, which applies convolutional filters (layers) to learn hierarchical features from image.}
@@ -159,33 +160,33 @@ In a GCN, the convolution operation is defined in terms of the graph's topology,
 A standard GCN layer operates through the following steps for each node $i$ in the graph:
 
 \begin{enumerate}
-    \item \textbf{Gather Features:} Collect the current feature vectors $h_j$ from all neighbors $j \in \mathcal{N}(i)$, plus the node's own feature $h_i$.
-    
-    \item \textbf{Normalize:} Because nodes have different degrees (numbers of neighbors), GCNs use a normalization factor. A common choice following \textbf{Kipf \& Welling (2016)} \cite{kipf2017semigcn} is:
-    \begin{equation}
-        \tilde{A} = A + I, \quad D_i = \sum_j \tilde{A}_{ij}, \quad \text{so that } D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}}
-    \end{equation}
-    where $A$ is the adjacency matrix and $I$ adds self-loops. This ensures each neighbor's contribution is scaled appropriately.
-    
-    \item \textbf{Apply Shared Weights:} Multiply the stack of gathered and normalized features by a weight matrix $W$. This transforms the aggregated neighborhood information into a new feature space.
-    
-    \item \textbf{Nonlinearity:} Pass the result through an activation function like ReLU (i.e., $\max(0, \cdot)$) to introduce non-linear modeling capabilities.
+      \item \textbf{Gather Features:} Collect the current feature vectors $h_j$ from all neighbors $j \in \mathcal{N}(i)$, plus the node's own feature $h_i$.
+
+      \item \textbf{Normalize:} Because nodes have different degrees (numbers of neighbors), GCNs use a normalization factor. A common choice following \textbf{Kipf \& Welling (2016)} \cite{kipf2017semigcn} is:
+            \begin{equation}
+                  \tilde{A} = A + I, \quad D_i = \sum_j \tilde{A}_{ij}, \quad \text{so that } D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}}
+            \end{equation}
+            where $A$ is the adjacency matrix and $I$ adds self-loops. This ensures each neighbor's contribution is scaled appropriately.
+
+      \item \textbf{Apply Shared Weights:} Multiply the stack of gathered and normalized features by a weight matrix $W$. This transforms the aggregated neighborhood information into a new feature space.
+
+      \item \textbf{Nonlinearity:} Pass the result through an activation function like ReLU (i.e., $\max(0, \cdot)$) to introduce non-linear modeling capabilities.
 \end{enumerate}
 
 Putting it all together, one \textbf{standard GCN layer} updates the node feature matrix $H$ as:
 \begin{equation}
-    H^{(k+1)} = \sigma\left(D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}} H^{(k)} W^{(k)}\right),
+      H^{(k+1)} = \sigma\left(D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}} H^{(k)} W^{(k)}\right),
 \end{equation}
 where:
 \begin{itemize}
-    \item $H^{(k)}$ is the matrix of node features at layer $k$
-    \item $W^{(k)}$ is the learnable weight matrix for layer $k$
-    \item $\sigma$ is an activation (e.g., ReLU)
-    \item $D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}}$ smoothly averages each node's neighbors (including itself) before applying $W$
+      \item $H^{(k)}$ is the matrix of node features at layer $k$
+      \item $W^{(k)}$ is the learnable weight matrix for layer $k$
+      \item $\sigma$ is an activation (e.g., ReLU)
+      \item $D^{-\frac{1}{2}} \tilde{A} D^{-\frac{1}{2}}$ smoothly averages each node's neighbors (including itself) before applying $W$
 \end{itemize}
 
 % photo of GCN architecture
-\begin{figure}[h]
+\begin{figure}[ht]
       \centering
       \includegraphics[width=1.0\textwidth]{../assets/gcn_architecture.png}
       \caption{A typical Graph Convolutional Network (GCN) architecture. The input graph undergoes multiple graph convolution layers that aggregate neighborhood features using graph convolution operations. Each layer transforms node features through message passing, followed by sort pooling to create a fixed-size representation, 1-D convolution for pattern extraction, and dense layers for final prediction. Colors in nodes represent different feature embeddings learned at each layer.}
@@ -218,9 +219,9 @@ This is particularly beneficial in scenarios where the graph structure is noisy 
 \newpage
 
 % photo of GAT architecture
-\begin{figure}[h]
+\begin{figure}[ht]
       \centering
-      \includegraphics[width=1.0\textwidth,trim=0 130 0 0,clip]{../assets/gat_architecture.png}
+      \includegraphics[width=0.8\textwidth,trim=0 130 0 0,clip]{../assets/gat_architecture.png}
       \caption{\textbf{Left:} The attention mechanism $a(W\vec{h_i}, W\vec{h_j})$ employed by the GAT model, parameterized by a weight vector $\vec{a} \in \mathbb{R}^{2F'}$, applying a LeakyReLU activation. \textbf{Right:} An illustration of multi-head attention (with $K = 3$ heads) by node 1 on its neighborhood. Different arrow styles and colors denote independent attention computations. The aggregated features from each head are concatenated or averaged to obtain $\vec{h'_1}$.}
       \label{fig:gat-architecture}
 \end{figure}
@@ -230,28 +231,28 @@ This is particularly beneficial in scenarios where the graph structure is noisy 
 A GAT layer operates through the following steps \cite{veličković2018graphattentionnetworks} for each node $i$ in the graph:
 
 \begin{enumerate}
-    \item \textbf{Compute Attention Coefficients:} For each edge $(i, j)$, compute a score $e_{ij}$ that measures how important node $j$'s feature is to node $i$. A simple form is a single-layer feed-forward network followed by a LeakyReLU:
-    \begin{equation}
-        e_{ij} = \text{LeakyReLU}\left(a^T \left[W \vec{h_i} \| W \vec{h_j}\right]\right),
-    \end{equation}
-    where:
-    \begin{itemize}
-        \item $W$ is a shared weight matrix (like in GCN).
-        \item $\left[\|\right]$ denotes concatenation of $i$'s and $j$'s transformed features.
-        \item $a$ is a learnable vector that projects the concatenated features to a scalar.
-    \end{itemize}
-    
-    \item \textbf{Normalize via Softmax:} Convert these raw scores into attention coefficients $\alpha_{ij}$ by normalizing across node $i$'s neighbors:
-    \begin{equation}
-        \alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}(i)} \exp(e_{ik})}.
-    \end{equation}
-    This ensures that the weights of all neighbors sum to 1 and can be interpreted like probabilities.
-    
-    \item \textbf{Weighted Aggregation:} Node $i$ then computes its new feature as a weighted sum of transformed neighbor features:
-    \begin{equation}
-        h_i^{(k+1)} = \sigma\left(\sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j^{(k)}\right).
-    \end{equation}
-    Here, each neighbor's input $W h_j^{(k)}$ is weighted by the learned attention score $\alpha_{ij}$.
+      \item \textbf{Compute Attention Coefficients:} For each edge $(i, j)$, compute a score $e_{ij}$ that measures how important node $j$'s feature is to node $i$. A simple form is a single-layer feed-forward network followed by a LeakyReLU:
+            \begin{equation}
+                  e_{ij} = \text{LeakyReLU}\left(a^T \left[W \vec{h_i} \| W \vec{h_j}\right]\right),
+            \end{equation}
+            where:
+            \begin{itemize}
+                  \item $W$ is a shared weight matrix (like in GCN).
+                  \item $\left[\|\right]$ denotes concatenation of $i$'s and $j$'s transformed features.
+                  \item $a$ is a learnable vector that projects the concatenated features to a scalar.
+            \end{itemize}
+
+      \item \textbf{Normalize via Softmax:} Convert these raw scores into attention coefficients $\alpha_{ij}$ by normalizing across node $i$'s neighbors:
+            \begin{equation}
+                  \alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}(i)} \exp(e_{ik})}.
+            \end{equation}
+            This ensures that the weights of all neighbors sum to 1 and can be interpreted like probabilities.
+
+      \item \textbf{Weighted Aggregation:} Node $i$ then computes its new feature as a weighted sum of transformed neighbor features:
+            \begin{equation}
+                  h_i^{(k+1)} = \sigma\left(\sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j^{(k)}\right).
+            \end{equation}
+            Here, each neighbor's input $W h_j^{(k)}$ is weighted by the learned attention score $\alpha_{ij}$.
 \end{enumerate}
 
 \textbf{Multi-Head Attention for Stability}. GAT often uses multiple attention heads in parallel.
@@ -261,6 +262,37 @@ Multi-head attention \textbf{stabilizes learning} (by providing multiple "views"
 
 By leveraging attention, GATs have demonstrated state-of-the-art performance on various graph-based tasks, including node classification and link prediction.
 They represent a significant step forward in the design of GNNs, highlighting the potential of combining graph-based approaches with advanced neural network architectures.
+
+\section{Summary}
+
+This essay has provided a comprehensive (and simple, I believe) exploration of the intersection between graph theory and artificial intelligence, with particular emphasis on the development and applications of \textbf{Graph Neural Networks (GNNs)}.
+We began by tracing the historical foundations of graph theory from \textbf{Euler's solution} to the Königsberg bridge problem in 1736 \cite{carlson2019konigsberg} to its \textbf{modern applications} in AI systems \cite{fan2024graphmachinelearningera}.
+
+The journey from static graph representations in early AI (such as semantic networks and Bayesian networks \cite{pearl1995bayesian, kelemen2007neural}) to dynamic learning algorithms capable of processing graph-structured data represents a fundamental shift in how we approach \textbf{relational information} in machine learning.
+The formal introduction of Graph Neural Networks by Scarselli et al. in 2009 \cite{scarselli2009graph} marked the beginning of a new era where neural networks could directly learn from graph topology rather than treating graphs merely as static data structures.
+
+In this work were examined two pivotal architectures that have shaped the field: \textbf{Graph Convolutional Networks (GCNs)} and \textbf{Graph Attention Networks (GATs)}.
+GCNs extended the principles of convolutional neural networks (CNNs) \cite{krizhevsky2012imagenet} to irregular graph structures through elegant mathematical formulations involving normalized adjacency matrices and learnable weight transformations \cite{kipf2017semigcn}.
+The key insight of GCNs lies in their ability to \textbf{aggregate neighborhood information} efficiently while maintaining parameter sharing across all nodes, enabling scalable processing of large graphs.
+
+GATs addressed a fundamental \textit{limitation of GCNs} by introducing \textbf{attention mechanisms} that allow nodes to dynamically weigh the importance of their neighbors \cite{veličković2018graphattentionnetworks}.
+Through learnable attention coefficients computed via feed-forward networks and softmax normalization, GATs can focus on the most relevant connections in a graph, making them particularly effective for heterogeneous graphs where not all neighbors contribute equally to a node's representation.
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+      \centering
+      \includegraphics[width=0.48\textwidth]{../assets/gnn_applications.png}
+      \caption{Illustration of the application of Large Language Models (LLMs) in graph machine learning. The integration of LLMs with Graph Neural Networks (GNNs) is utilized to model an extensive range of graph data across various downstream tasks \cite{fan2024graphmachinelearningera}.}
+      \label{fig:gnn-applications}
+\end{wrapfigure}
+
+The mathematical rigor presented throughout this essay demonstrates how both architectures operate through \textbf{iterative message-passing frameworks}, where each layer enables nodes to gather information from progressively distant neighbors.
+This multi-layer approach allows GNNs to capture long-range dependencies and complex structural patterns essential for various graph-based tasks including node classification, link prediction, and graph-level prediction.
+
+The timeline of developments reveals the rapid evolution of this field, from foundational graph theory concepts to cutting-edge applications in molecular property prediction, social network analysis, and knowledge graph reasoning.
+The emergence of specialized frameworks like \textbf{PyTorch Geometric} and \textbf{DGL} \cite{pytorch_geometric,dgl} has further accelerated research and practical adoption of GNNs across diverse domains.
+
+Looking forward, the field continues to grapple with fundamental questions about the expressive power of message-passing architectures and the development of more powerful graph learning paradigms.
+The integration of graph neural networks with other advanced architectures such as transformers and the exploration of topological deep learning represent promising directions for future research.
 
 
 \bibliographystyle{unsrt}
