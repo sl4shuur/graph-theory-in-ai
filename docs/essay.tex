@@ -202,6 +202,66 @@ While CNNs excel at capturing local patterns in grid-like data, GCNs are designe
 In GCNs each node's new feature is influenced by its neighbors. Over multiple layers, information flows farther out (2 hops, 3 hops, $\dots$), letting each node gather context from a wider subgraph.
 Also, unlike fully-connected layers, GCNs use one weight matrix $W$ per layer for all nodes—scaling gracefully to large graphs. Thus, they can efficiently process large graphs without a combinatorial explosion in parameters.
 
+\section{Graph Attention Networks}
+
+While Graph Convolutional Networks (GCNs) have demonstrated significant success in various graph-based tasks, they rely on a \textbf{fixed aggregation} scheme that treats all neighbors equally.
+But in many real graphs, some neighbors are more informative (e.g. a close collaborator vs. a distant acquaintance in a social network).
+
+\textbf{Graph Attention Networks (GATs)} build upon the foundations laid by GCNs by incorporating \textbf{attention mechanisms} into the graph convolution process.
+Attention lets a node learn \textbf{how much} to listen to each neighbor, rather than treating them all the same.
+This allows GATs to weigh the importance of neighboring nodes dynamically, rather than treating all neighbors equally.
+The attention mechanism enables the model to focus on the most relevant nodes in the graph, improving its ability to capture complex relationships and dependencies.
+
+GATs operate by computing attention coefficients for each pair of connected nodes, which determine the weight of each neighbor's contribution to the target node's representation.
+This is particularly beneficial in scenarios where the graph structure is noisy or where certain nodes are more informative than others.
+
+\newpage
+
+% photo of GAT architecture
+\begin{figure}[h]
+      \centering
+      \includegraphics[width=1.0\textwidth,trim=0 130 0 0,clip]{../assets/gat_architecture.png}
+      \caption{\textbf{Left:} The attention mechanism $a(W\vec{h_i}, W\vec{h_j})$ employed by the GAT model, parameterized by a weight vector $\vec{a} \in \mathbb{R}^{2F'}$, applying a LeakyReLU activation. \textbf{Right:} An illustration of multi-head attention (with $K = 3$ heads) by node 1 on its neighborhood. Different arrow styles and colors denote independent attention computations. The aggregated features from each head are concatenated or averaged to obtain $\vec{h'_1}$.}
+      \label{fig:gat-architecture}
+\end{figure}
+
+\textbf{How does it work?}
+
+A GAT layer operates through the following steps \cite{veličković2018graphattentionnetworks} for each node $i$ in the graph:
+
+\begin{enumerate}
+    \item \textbf{Compute Attention Coefficients:} For each edge $(i, j)$, compute a score $e_{ij}$ that measures how important node $j$'s feature is to node $i$. A simple form is a single-layer feed-forward network followed by a LeakyReLU:
+    \begin{equation}
+        e_{ij} = \text{LeakyReLU}\left(a^T \left[W \vec{h_i} \| W \vec{h_j}\right]\right),
+    \end{equation}
+    where:
+    \begin{itemize}
+        \item $W$ is a shared weight matrix (like in GCN).
+        \item $\left[\|\right]$ denotes concatenation of $i$'s and $j$'s transformed features.
+        \item $a$ is a learnable vector that projects the concatenated features to a scalar.
+    \end{itemize}
+    
+    \item \textbf{Normalize via Softmax:} Convert these raw scores into attention coefficients $\alpha_{ij}$ by normalizing across node $i$'s neighbors:
+    \begin{equation}
+        \alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}(i)} \exp(e_{ik})}.
+    \end{equation}
+    This ensures that the weights of all neighbors sum to 1 and can be interpreted like probabilities.
+    
+    \item \textbf{Weighted Aggregation:} Node $i$ then computes its new feature as a weighted sum of transformed neighbor features:
+    \begin{equation}
+        h_i^{(k+1)} = \sigma\left(\sum_{j \in \mathcal{N}(i)} \alpha_{ij} W h_j^{(k)}\right).
+    \end{equation}
+    Here, each neighbor's input $W h_j^{(k)}$ is weighted by the learned attention score $\alpha_{ij}$.
+\end{enumerate}
+
+\textbf{Multi-Head Attention for Stability}. GAT often uses multiple attention heads in parallel.
+The idea is to allow each head to compute its own attention coefficients $\alpha_{ij}^{(m)}$ and to produce its own updated features $h_i^{(k+1,m)}$.
+Then, these head outputs are then concatenated (or averaged) to form the final node embedding for layer $k + 1$.
+Multi-head attention \textbf{stabilizes learning} (by providing multiple "views" of neighbor importance) and increases expressive power.
+
+By leveraging attention, GATs have demonstrated state-of-the-art performance on various graph-based tasks, including node classification and link prediction.
+They represent a significant step forward in the design of GNNs, highlighting the potential of combining graph-based approaches with advanced neural network architectures.
+
 
 \bibliographystyle{unsrt}
 \bibliography{references}
